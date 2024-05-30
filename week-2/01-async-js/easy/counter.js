@@ -1,4 +1,4 @@
-a = 0;
+let a = 0;
 setInterval(() => {
   a++;
   console.log(a);
