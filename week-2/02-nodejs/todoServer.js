@@ -57,7 +57,7 @@ app.get("/todos/:id", (req, res) => {
   if (todo.length == 0) {
     return res.status(404).send("Not Found");
   }
-  return res.status(201).json(todo[0]);
+  return res.status(200).json(todo[0]);
 
 })
 app.post("/todos", (req, res) => {
@@ -71,6 +71,39 @@ app.post("/todos", (req, res) => {
   return res.status(201).json({ id: newTodo.id });
 })
 
-app.listen(3000, () => {
-  console.log(`Port is listening on 3000`);
+app.put("/todos/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  let index = -1;
+  for (let i = 0; i < todos.length; i++) {
+    if (todos[i].id == id) {
+      index = i;
+      break;
+    }
+  }
+  if (index == -1) {
+    return res.status(404).send("Not Found");
+  }
+  return res.status(200).send("Item was found and updated");
 })
+
+app.delete("/todos/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  let index = -1;
+  for (let i = 0; i < todos.length; i++) {
+    if (todos[i].id == id) {
+      index = i;
+      break;
+    }
+  }
+
+  if (index == -1) {
+    return res.status(404).send("Not Found")
+  }
+  todos.splice(index, 1);
+  return res.status(200).send("Deleted");
+})
+
+module.exports = app;
+
+
+
