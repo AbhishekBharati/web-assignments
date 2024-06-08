@@ -39,11 +39,38 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(express.json());
+
+const todos = [];
+
+app.get("/todos", (req, res) => {
+  res.status(200).json(todos);
+});
+
+app.get("/todos/:id", (req, res) => {
+  const todo = todos.filter((item) => item.id == req.params.id);
+  if (todo.length == 0) {
+    return res.status(404).send("Not Found");
+  }
+  return res.status(201).json(todo[0]);
+
+})
+app.post("/todos", (req, res) => {
+  const newTodo = {
+    title: req.body.title,
+    completed: req.body.completed,
+    description: req.body.description,
+    id: Math.floor(Math.random() * 1000)
+  }
+  todos.push(newTodo);
+  return res.status(201).json({ id: newTodo.id });
+})
+
+app.listen(3000, () => {
+  console.log(`Port is listening on 3000`);
+})
